@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SceneScope</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#5D5CDE',
+                        secondary: '#8585E0',
+                        dark: {
+                            primary: '#6E6DFF',
+                            secondary: '#9594FF',
+                            bg: '#181818',
+                            card: '#252525',
+                            text: '#E1E1E1'
+                        }
+                    }
+                }
+            }
+        }
+
+        // Check for dark mode preference
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            document.documentElement.classList.add('dark');
+        }
+        
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
+            if (event.matches) {
+                document.documentElement.classList.add('dark');
+            } else {
+                document.documentElement.classList.remove('dark');
+            }
+        });
+
+        // Sample data
+        const sceneData = [
+            {
+                id: 1,
+                title: "The Dark Knight - Truck Flip Scene",
+                director: "Christopher Nolan",
+                year: 2008,
+                genre: "Action",
+                thumbnail: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225' fill='%23333'%3E%3Crect width='400' height='225' fill='%23666'/%3E%3Cpath d='M185 112.5 L215 112.5 L215 125 L185 125 Z' fill='%23333'/%3E%3Ccircle cx='200' cy='100' r='50' fill='%23444'/%3E%3Cpath d='M150 100 Q200 50 250 100 Q200 150 150 100 Z' fill='%23555'/%3E%3C/svg%3E",
+                camera: "VistaVision, IMAX",
+                lenses: "Panavision Primo",
+                lighting: "Natural daylight, practical street lights",
+                camera_movement: "Static, Vehicle mounted",
+                techniques: ["Practical Effects", "IMAX Filming", "Stunt Coordination"],
+                description: "A groundbreaking scene where Batman flips the Joker's semi-truck using the Batpod. Shot with practical effects on Chicago's lower Wacker Drive using a real truck that was pneumatically flipped.",
+                equipment: {
+                    cameras: ["IMAX MSM 9802", "Panavision Panaflex Millennium XL"],
+                    support: ["Custom vehicle mounts", "Technocrane"],
+                    lighting: ["HMI fixtures", "Practical street lights", "Bounce reflectors"]
+                },
+                diagram: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225' fill='%23333'%3E%3Crect width='400' height='225' fill='%23666'/%3E%3Cpath d='M100 150 L300 150 L300 175 L100 175 Z' fill='%23444'/%3E%3Crect x='150' y='130' width='100' height='20' fill='%23555'/%3E%3Ccircle cx='125' cy='175' r='10' fill='%23222'/%3E%3Ccircle cx='275' cy='175' r='10' fill='%23222'/%3E%3Cpath d='M75 125 L90 110 L310 110 L325 125 L325 150 L75 150 Z' fill='%23333'/%3E%3Ccircle cx='175' cy='60' r='15' fill='%23777'/%3E%3Cpath d='M175 75 L175 110' stroke='%23777' stroke-width='3'/%3E%3Ctext x='190' y='65' font-size='12' fill='white'>Camera</text>%3C/svg%3E"
+            },
+            {
+                id: 2,
+                title: "Inception - Rotating Hallway Scene",
+                director: "Christopher Nolan",
+                year: 2010,
+                genre: "Sci-Fi",
+                thumbnail: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225' fill='%23333'%3E%3Crect width='400' height='225' fill='%23666'/%3E%3Crect x='100' y='75' width='200' height='75' fill='%23444'/%3E%3Cpath d='M100 75 L300 75 L300 150 L100 150 Z' fill='%23555'/%3E%3Cpath d='M150 100 L250 100 M150 125 L250 125' stroke='%23333' stroke-width='5'/%3E%3Ccircle cx='200' cy='112.5' r='20' fill='%23777'/%3E%3C/svg%3E",
+                camera: "35mm Panavision",
+                lenses: "Panavision Primo",
+                lighting: "Controlled studio lighting",
+                camera_movement: "Rotating set, Fixed camera",
+                techniques: ["Practical Sets", "In-camera Effects", "Stunt Coordination"],
+                description: "A mind-bending sequence where gravity shifts and Arthur fights in a rotating hotel hallway. Shot using a massive rotating set built specifically for the film.",
+                equipment: {
+                    cameras: ["Panavision Panaflex Millennium XL", "Arriflex 435"],
+                    support: ["Custom rotating set", "Fixed camera mounts"],
+                    lighting: ["Tungsten fixtures", "Practical wall sconces", "LED panels"]
+                },
+                diagram: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225' fill='%23333'%3E%3Crect width='400' height='225' fill='%23666'/%3E%3Cpath d='M100 75 L300 75 L300 150 L100 150 Z' fill='%23444'/%3E%3Cpath d='M100 75 L300 75 L300 150 L100 150 Z' stroke='%23222' stroke-width='2' fill='none'/%3E%3Ccircle cx='200' cy='112.5' r='10' fill='%23777'/%3E%3Cpath d='M170 60 L200 112.5' stroke='%23777' stroke-width='2'/%3E%3Ccircle cx='170' cy='60' r='15' fill='%23777'/%3E%3Ctext x='130' y='60' font-size='12' fill='white'>Camera</text>%3E%3Cpath d='M150 110 A50 50 0 0 1 250 110' stroke='%23fff' stroke-width='2' stroke-dasharray='5,5' fill='none'/%3E%3Ctext x='185' y='95' font-size='10' fill='white'>Rotation</text>%3C/svg%3E"
+            },
+            {
+                id: 3,
+                title: "Mad Max: Fury Road - Sandstorm Chase",
+                director: "George Miller",
+                year: 2015,
+                genre: "Action",
+                thumbnail: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225' fill='%23333'%3E%3Crect width='400' height='225' fill='%23D4A76A'/%3E%3Cpath d='M0 150 L400 150 L400 225 L0 225 Z' fill='%23B37C4A'/%3E%3Ccircle cx='350' cy='75' r='30' fill='%23FFDB99'/%3E%3Cpath d='M100 160 L150 160 L140 140 L110 140 Z' fill='%23666'/%3E%3Cpath d='M250 165 L320 165 L310 135 L260 135 Z' fill='%23666'/%3E%3Cpath d='M50 225 Q200 50 400 225' stroke='%23FFDB9966' stroke-width='100' fill='none'/%3E%3C/svg%3E",
+                camera: "Arri Alexa, Canon 5D",
+                lenses: "Panavision Ultra Speed Z-Series",
+                lighting: "Natural daylight, Enhanced color grading",
+                camera_movement: "Vehicle mounted, Stunt rigs",
+                techniques: ["Practical Effects", "Vehicle Stunts", "Edge Arm Camera Rigs"],
+                description: "The iconic chase sequence where Furiosa and Max attempt to outrun Immortan Joe's fleet while heading into a massive sandstorm.",
+                equipment: {
+                    cameras: ["Arri Alexa XT", "Canon 5D Mark II", "Blackmagic Pocket"],
+                    support: ["Edge Arm", "Pursuit Systems", "Custom vehicle mounts"],
+                    lighting: ["Natural sunlight", "Reflectors", "Post-production color enhancement"]
+                },
+                diagram: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225' fill='%23333'%3E%3Crect width='400' height='225' fill='%23D4A76A'/%3E%3Cpath d='M0 150 L400 150 L400 225 L0 225 Z' fill='%23B37C4A'/%3E%3Crect x='150' y='160' width='80' height='30' fill='%23555'/%3E%3Ccircle cx='165' cy='190' r='10' fill='%23333'/%3E%3Ccircle cx='215' cy='190' r='10' fill='%23333'/%3E%3Cpath d='M80 165 L100 155 L130 155 L140 165 L140 180 L80 180 Z' fill='%23666'/%3E%3Ccircle cx='95' cy='180' r='8' fill='%23333'/%3E%3Ccircle cx='125' cy='180' r='8' fill='%23333'/%3E%3Cpath d='M100 130 L105 140 L115 140' stroke='%23777' stroke-width='2'/%3E%3Ccircle cx='100' cy='130' r='10' fill='%23777'/%3E%3Ctext x='80' y='120' font-size='10' fill='white'>Camera</text>%3C/svg%3E"
+            },
+            {
+                id: 4,
+                title: "Birdman - Continuous Shot",
+                director: "Alejandro González Iñárritu",
+                year: 2014,
+                genre: "Drama",
+                thumbnail: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225' fill='%23333'%3E%3Crect width='400' height='225' fill='%23666'/%3E%3Crect x='50' y='50' width='300' height='125' fill='%23444'/%3E%3Cpath d='M50 175 L350 175 L350 50 L50 50 Z' fill='none' stroke='%23888' stroke-width='2'/%3E%3Cpath d='M100 175 L100 50 M200 175 L200 50 M300 175 L300 50' stroke='%23888' stroke-width='1' stroke-dasharray='5,5'/%3E%3Ccircle cx='150' cy='112.5' r='15' fill='%23777'/%3E%3Cpath d='M150 112.5 L300 112.5' stroke='%23777' stroke-width='2' stroke-dasharray='10,5'/%3E%3C/svg%3E",
+                camera: "Arri Alexa XT",
+                lenses: "Leica Summilux-C",
+                lighting: "Natural light, practicals, minimal lighting",
+                camera_movement: "Steadicam, Handheld",
+                techniques: ["Long Takes", "Hidden Cuts", "Steadicam"],
+                description: "The film appears as one continuous shot through clever editing and choreography, following the main character through the theater's backstage areas.",
+                equipment: {
+                    cameras: ["Arri Alexa XT", "Custom rigs"],
+                    support: ["Steadicam", "Handheld configurations"],
+                    lighting: ["Practical light sources", "HMIs", "Minimal lighting kit"]
+                },
+                diagram: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225' fill='%23333'%3E%3Crect width='400' height='225' fill='%23666'/%3E%3Cpath d='M50 50 L350 50 L350 175 L50 175 Z' fill='%23444'/%3E%3Cpath d='M75 175 L75 50 M150 175 L150 50 M225 175 L225 50 M300 175 L300 50' stroke='%23888' stroke-width='1' stroke-dasharray='5,5'/%3E%3Cpath d='M50 80 L350 80 M50 140 L350 140' stroke='%23888' stroke-width='1' stroke-dasharray='5,5'/%3E%3Cpath d='M50 100 Q100 120 150 100 Q200 80 250 100 Q300 120 350 100' stroke='%23FFF' stroke-width='2' fill='none'/%3E%3Ccircle cx='150' cy='100' r='10' fill='%23777'/%3E%3Ctext x='110' y='85' font-size='10' fill='white'>Camera Path</text>%3C/svg%3E"
+            },
+            {
+                id: 5,
+                title: "Children of Men - Car Ambush Scene",
+                director: "Alfonso Cuarón",
+                year: 2006,
+                genre: "Sci-Fi",
+                thumbnail: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225' fill='%23333'%3E%3Crect width='400' height='225' fill='%23666'/%3E%3Cpath d='M100 125 L300 125 L300 175 L100 175 Z' fill='%23444'/%3E%3Crect x='125' y='100' width='150' height='25' fill='%23555'/%3E%3Ccircle cx='150' cy='175' r='12' fill='%23333'/%3E%3Ccircle cx='250' cy='175' r='12' fill='%23333'/%3E%3Cpath d='M180 90 L220 90 L220 100 L180 100 Z' fill='%23888'/%3E%3Cpath d='M50 125 L100 125 M300 125 L350 125' stroke='%23888' stroke-width='2' stroke-dasharray='5,5'/%3E%3Cpath d='M200 50 L200 90' stroke='%23777' stroke-width='2'/%3E%3Ccircle cx='200' cy='50' r='15' fill='%23777'/%3E%3C/svg%3E",
+                camera: "Arricam LT",
+                lenses: "Angenieux Optimo",
+                lighting: "Natural, available light",
+                camera_movement: "Handheld, Custom car rig",
+                techniques: ["Long Takes", "In-car Rig", "360-degree Camera Movement"],
+                description: "A remarkable unbroken shot of an ambush on a moving car, with the camera moving inside and outside the vehicle as the attack unfolds.",
+                equipment: {
+                    cameras: ["Arricam LT", "Custom-built rig"],
+                    support: ["Custom roll cage camera mount", "Extending arm system"],
+                    lighting: ["Natural light", "Minimal additional lighting"]
+                },
+                diagram: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225' fill='%23333'%3E%3Crect width='400' height='225' fill='%23666'/%3E%3Cpath d='M100 150 L300 150 L275 100 L125 100 Z' fill='%23444'/%3E%3Ccircle cx='150' cy='150' r='10' fill='%23333'/%3E%3Ccircle cx='250' cy='150' r='10' fill='%23333'/%3E%3Cpath d='M150 110 L160 110 L160 130 L150 130 Z M240 110 L250 110 L250 130 L240 130 Z' fill='%23888'/%3E%3Cpath d='M200 110 L200 80 L210 80 L210 110 Z' fill='%23777'/%3E%3Cpath d='M180 80 L230 80 A25 25 0 0 0 180 80' stroke='%23777' stroke-width='2' fill='none'/%3E%3Ccircle cx='200' cy='60' r='10' fill='%23777'/%3E%3Ctext x='160' y='50' font-size='10' fill='white'>Camera Path</text>%3C/svg%3E"
+            },
+            {
+                id: 6,
+                title: "The Revenant - Opening Battle Scene",
+                director: "Alejandro González Iñárritu",
+                year: 2015,
+                genre: "Drama",
+                thumbnail: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225' fill='%23333'%3E%3Crect width='400' height='225' fill='%23666'/%3E%3Cpath d='M0 150 L400 150 L400 225 L0 225 Z' fill='%23444'/%3E%3Cpath d='M50 100 L100 120 L150 110 L200 130 L250 115 L300 125 L350 105' stroke='%23888' stroke-width='5' fill='none'/%3E%3Ccircle cx='125' cy='175' r='3' fill='%23333'/%3E%3Ccircle cx='145' cy='185' r='3' fill='%23333'/%3E%3Ccircle cx='165' cy='180' r='3' fill='%23333'/%3E%3Ccircle cx='185' cy='190' r='3' fill='%23333'/%3E%3Ccircle cx='205' cy='175' r='3' fill='%23333'/%3E%3Ccircle cx='225' cy='185' r='3' fill='%23333'/%3E%3Ccircle cx='245' cy='175' r='3' fill='%23333'/%3E%3Ccircle cx='265' cy='180' r='3' fill='%23333'/%3E%3Ccircle cx='285' cy='185' r='3' fill='%23333'/%3E%3Cpath d='M175 110 Q200 75 225 110' stroke='%23777' stroke-width='2' fill='none'/%3E%3Ccircle cx='200' cy='75' r='10' fill='%23777'/%3E%3C/svg%3E",
+                camera: "Arri Alexa 65",
+                lenses: "Custom Ultra Panavision 70 lenses",
+                lighting: "Natural light only",
+                camera_movement: "Steadicam, Handheld",
+                techniques: ["Natural Lighting", "Long Takes", "Wide Angle Lenses"],
+                description: "The intense opening battle scene was filmed in a series of long, unbroken takes with natural light, capturing the chaotic nature of the Native American attack.",
+                equipment: {
+                    cameras: ["Arri Alexa 65", "RED Dragon"],
+                    support: ["Steadicam", "Technocrane", "Handheld rigs"],
+                    lighting: ["Only natural light", "Reflectors"]
+                },
+                diagram: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225' fill='%23333'%3E%3Crect width='400' height='225' fill='%23666'/%3E%3Cpath d='M0 150 L400 150 L400 225 L0 225 Z' fill='%23444'/%3E%3Ccircle cx='100' cy='175' r='5' fill='%23333'/%3E%3Ccircle cx='130' cy='185' r='5' fill='%23333'/%3E%3Ccircle cx='160' cy='180' r='5' fill='%23333'/%3E%3Ccircle cx='190' cy='175' r='5' fill='%23333'/%3E%3Ccircle cx='220' cy='185' r='5' fill='%23333'/%3E%3Ccircle cx='250' cy='175' r='5' fill='%23333'/%3E%3Ccircle cx='280' cy='180' r='5' fill='%23333'/%3E%3Ccircle cx='310' cy='175' r='5' fill='%23333'/%3E%3Cpath d='M50 100 Q125 175 200 100 Q275 175 350 100' stroke='%23FFF' stroke-width='2' stroke-dasharray='5,5' fill='none'/%3E%3Ccircle cx='200' cy='100' r='10' fill='%23777'/%3E%3Ctext x='150' y='85' font-size='12' fill='white'>Camera Path</text>%3C/svg%3E"
+            }
+        ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Populate scene library
+            populateSceneLibrary(sceneData);
+            
+            // Initialize search functionality
+            initSearch();
+            
+            // Set up initial view
+            showMainView();
+            
+            // Add event listeners for tabs
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('tab-active'));
+                    
+                    // Add active class to clicked tab
+                    this.classList.add('tab-active');
+                    
+                    // Show corresponding view
+                    const view = this.getAttribute('data-view');
+                    if (view === 'main') {
+                        showMainView();
+                    } else if (view === 'educational') {
+                        showEducationalView();
+                    } else if (view === 'community') {
+                        showCommunityView();
+                    }
+                });
+            });
+        });
+
+        function populateSceneLibrary(scenes) {
+            const container = document.getElementById('scene-grid');
+            container.innerHTML = '';
+            
+            scenes.forEach(scene => {
+                const card = document.createElement('div');
+                card.className = 'scene-card bg-white dark:bg-dark-card rounded-lg shadow-md overflow-hidden transition-transform hover:scale-102 cursor-pointer';
+                card.setAttribute('data-id', scene.id);
+                
+                card.innerHTML = `
+                    <div class="relative">
+                        <div class="aspect-video w-full bg-gray-200">
+                            <img src="${scene.thumbnail}" alt="${scene.title}" class="w-full h-full object-cover">
+                        </div>
+                        <div class="absolute bottom-0 left-0 right-0 p-2 bg-gradient-to-t from-black/70 to-transparent">
+                            <span class="text-white text-xs font-medium">${scene.director}, ${scene.year}</span>
+                        </div>
+                    </div>
+                    <div class="p-3">
+                        <h3 class="font-semibold text-gray-900 dark:text-white text-sm sm:text-base line-clamp-2">${scene.title}</h3>
+                        <div class="flex flex-wrap mt-2 gap-1">
+                            <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md text-xs">${scene.genre}</span>
+                            <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md text-xs">${scene.camera}</span>
+                        </div>
+                    </div>
+                `;
+                
+                card.addEventListener('click', () => showSceneDetails(scene));
+                container.appendChild(card);
+            });
+        }
+
+        function initSearch() {
+            const searchInput = document.getElementById('search-input');
+            const genreFilter = document.getElementById('genre-filter');
+            const cameraFilter = document.getElementById('camera-filter');
+            const techniqueFilter = document.getElementById('technique-filter');
+            
+            // Collect unique values for filters
+            const genres = [...new Set(sceneData.map(scene => scene.genre))];
+            const cameras = [...new Set(sceneData.map(scene => scene.camera.split(',')[0].trim()))];
+            const techniques = [...new Set(sceneData.flatMap(scene => scene.techniques))];
+            
+            // Populate filter dropdowns
+            populateFilterOptions(genreFilter, genres);
+            populateFilterOptions(cameraFilter, cameras);
+            populateFilterOptions(techniqueFilter, techniques);
+            
+            // Add event listeners
+            [searchInput, genreFilter, cameraFilter, techniqueFilter].forEach(element => {
+           
