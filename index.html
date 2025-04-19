@@ -30,7 +30,7 @@
         if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
             document.documentElement.classList.add('dark');
         }
-        
+
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', event => {
             if (event.matches) {
                 document.documentElement.classList.add('dark');
@@ -59,7 +59,7 @@
                     support: ["Custom vehicle mounts", "Technocrane"],
                     lighting: ["HMI fixtures", "Practical street lights", "Bounce reflectors"]
                 },
-                diagram: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225' fill='%23333'%3E%3Crect width='400' height='225' fill='%23666'/%3E%3Cpath d='M100 150 L300 150 L300 175 L100 175 Z' fill='%23444'/%3E%3Crect x='150' y='130' width='100' height='20' fill='%23555'/%3E%3Ccircle cx='125' cy='175' r='10' fill='%23222'/%3E%3Ccircle cx='275' cy='175' r='10' fill='%23222'/%3E%3Cpath d='M75 125 L90 110 L310 110 L325 125 L325 150 L75 150 Z' fill='%23333'/%3E%3Ccircle cx='175' cy='60' r='15' fill='%23777'/%3E%3Cpath d='M175 75 L175 110' stroke='%23777' stroke-width='3'/%3E%3Ctext x='190' y='65' font-size='12' fill='white'>Camera</text>%3C/svg%3E"
+                diagram: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 225' fill='%23333'%3E%3Crect width='400' height='225' fill='%23666'/%3E%3Cpath d='M100 150 L300 150 L300 175 L100 175 Z' fill='%23444'/%3E%3Crect x='150' y='130' width='100' height='20' fill='%23555'/%3E%3Ccircle cx='125' cy='175' r='10' fill='%23222'/%3E%3Ccircle cx='275' cy='175' r='10' fill='%23222'/%3E%3Cpath d='M75 125 L90 110 L310 110 L325 125 L325 150 L75 150 Z' fill='%23333'/%3E%3Ccircle cx='175' cy='60' r='15' fill='%23777'/%3E%3Cpath d='M175 75 L175 110' stroke='%23777' stroke-width='3'/%3E%3Ctext x='190' y='65' font-size='12' fill='white'>Camera</text>%3E%3C/svg%3E"
             },
             {
                 id: 2,
@@ -166,22 +166,22 @@
         document.addEventListener('DOMContentLoaded', function() {
             // Populate scene library
             populateSceneLibrary(sceneData);
-            
+
             // Initialize search functionality
             initSearch();
-            
+
             // Set up initial view
             showMainView();
-            
+
             // Add event listeners for tabs
             document.querySelectorAll('.tab').forEach(tab => {
                 tab.addEventListener('click', function() {
                     // Remove active class from all tabs
                     document.querySelectorAll('.tab').forEach(t => t.classList.remove('tab-active'));
-                    
+
                     // Add active class to clicked tab
                     this.classList.add('tab-active');
-                    
+
                     // Show corresponding view
                     const view = this.getAttribute('data-view');
                     if (view === 'main') {
@@ -198,12 +198,12 @@
         function populateSceneLibrary(scenes) {
             const container = document.getElementById('scene-grid');
             container.innerHTML = '';
-            
+
             scenes.forEach(scene => {
                 const card = document.createElement('div');
                 card.className = 'scene-card bg-white dark:bg-dark-card rounded-lg shadow-md overflow-hidden transition-transform hover:scale-102 cursor-pointer';
                 card.setAttribute('data-id', scene.id);
-                
+
                 card.innerHTML = `
                     <div class="relative">
                         <div class="aspect-video w-full bg-gray-200">
@@ -221,7 +221,7 @@
                         </div>
                     </div>
                 `;
-                
+
                 card.addEventListener('click', () => showSceneDetails(scene));
                 container.appendChild(card);
             });
@@ -232,17 +232,144 @@
             const genreFilter = document.getElementById('genre-filter');
             const cameraFilter = document.getElementById('camera-filter');
             const techniqueFilter = document.getElementById('technique-filter');
-            
+
             // Collect unique values for filters
             const genres = [...new Set(sceneData.map(scene => scene.genre))];
             const cameras = [...new Set(sceneData.map(scene => scene.camera.split(',')[0].trim()))];
             const techniques = [...new Set(sceneData.flatMap(scene => scene.techniques))];
-            
+
             // Populate filter dropdowns
             populateFilterOptions(genreFilter, genres);
             populateFilterOptions(cameraFilter, cameras);
             populateFilterOptions(techniqueFilter, techniques);
-            
+
             // Add event listeners
             [searchInput, genreFilter, cameraFilter, techniqueFilter].forEach(element => {
-           
+                element.addEventListener('input', filterScenes);
+            });
+        }
+
+        function populateFilterOptions(filterElement, options) {
+            filterElement.innerHTML = '<option value="">All</option>';
+            options.forEach(option => {
+                const opt = document.createElement('option');
+                opt.value = option;
+                opt.textContent = option;
+                filterElement.appendChild(opt);
+            });
+        }
+
+        function filterScenes() {
+            const searchInput = document.getElementById('search-input').value.toLowerCase();
+            const genreFilter = document.getElementById('genre-filter').value;
+            const cameraFilter = document.getElementById('camera-filter').value;
+            const techniqueFilter = document.getElementById('technique-filter').value;
+
+            const filteredScenes = sceneData.filter(scene => {
+                const matchesSearch = scene.title.toLowerCase().includes(searchInput);
+                const matchesGenre = genreFilter === '' || scene.genre === genreFilter;
+                const matchesCamera = cameraFilter === '' || scene.camera.includes(cameraFilter);
+                const matchesTechnique = techniqueFilter === '' || scene.techniques.includes(techniqueFilter);
+
+                return matchesSearch && matchesGenre && matchesCamera && matchesTechnique;
+            });
+
+            populateSceneLibrary(filteredScenes);
+        }
+
+        function showMainView() {
+            document.getElementById('main-view').style.display = 'block';
+            document.getElementById('educational-view').style.display = 'none';
+            document.getElementById('community-view').style.display = 'none';
+        }
+
+        function showEducationalView() {
+            document.getElementById('main-view').style.display = 'none';
+            document.getElementById('educational-view').style.display = 'block';
+            document.getElementById('community-view').style.display = 'none';
+        }
+
+        function showCommunityView() {
+            document.getElementById('main-view').style.display = 'none';
+            document.getElementById('educational-view').style.display = 'none';
+            document.getElementById('community-view').style.display = 'block';
+        }
+
+        function showSceneDetails(scene) {
+            const detailsContainer = document.getElementById('scene-details');
+            detailsContainer.innerHTML = `
+                <div class="scene-details-card bg-white dark:bg-dark-card rounded-lg shadow-md p-4">
+                    <h2 class="font-semibold text-gray-900 dark:text-white text-lg">${scene.title}</h2>
+                    <div class="flex flex-wrap mt-2 gap-1">
+                        <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md text-xs">${scene.genre}</span>
+                        <span class="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-md text-xs">${scene.camera}</span>
+                    </div>
+                    <div class="mt-4">
+                        <img src="${scene.thumbnail}" alt="${scene.title}" class="w-full h-auto rounded-md">
+                    </div>
+                    <div class="mt-4">
+                        <p class="text-gray-700 dark:text-gray-300">${scene.description}</p>
+                    </div>
+                    <div class="mt-4">
+                        <h3 class="font-semibold text-gray-900 dark:text-white text-base">Equipment</h3>
+                        <ul class="list-disc list-inside text-gray-700 dark:text-gray-300">
+                            <li>Cameras: ${scene.equipment.cameras.join(', ')}</li>
+                            <li>Support: ${scene.equipment.support.join(', ')}</li>
+                            <li>Lighting: ${scene.equipment.lighting.join(', ')}</li>
+                        </ul>
+                    </div>
+                    <div class="mt-4">
+                        <h3 class="font-semibold text-gray-900 dark:text-white text-base">Techniques</h3>
+                        <ul class="list-disc list-inside text-gray-700 dark:text-gray-300">
+                            ${scene.techniques.map(technique => `<li>${technique}</li>`).join('')}
+                        </ul>
+                    </div>
+                    <div class="mt-4">
+                        <h3 class="font-semibold text-gray-900 dark:text-white text-base">Diagram</h3>
+                        <img src="${scene.diagram}" alt="${scene.title} Diagram" class="w-full h-auto rounded-md">
+                    </div>
+                </div>
+            `;
+            detailsContainer.style.display = 'block';
+        }
+    </script>
+</head>
+<body class="bg-gray-100 dark:bg-dark-bg text-gray-900 dark:text-dark-text">
+    <div class="container mx-auto p-4">
+        <header class="flex justify-between items-center mb-4">
+            <h1 class="text-2xl font-bold">SceneScope</h1>
+            <div class="flex space-x-4">
+                <div class="tab tab-active" data-view="main">Main</div>
+                <div class="tab" data-view="educational">Educational</div>
+                <div class="tab" data-view="community">Community</div>
+            </div>
+        </header>
+        <main>
+            <div id="main-view">
+                <div class="flex justify-between items-center mb-4">
+                    <input type="text" id="search-input" class="border border-gray-300 dark:border-gray-700 rounded-md p-2" placeholder="Search scenes...">
+                    <div class="flex space-x-2">
+                        <select id="genre-filter" class="border border-gray-300 dark:border-gray-700 rounded-md p-2">
+                            <option value="">All Genres</option>
+                        </select>
+                        <select id="camera-filter" class="border border-gray-300 dark:border-gray-700 rounded-md p-2">
+                            <option value="">All Cameras</option>
+                        </select>
+                        <select id="technique-filter" class="border border-gray-300 dark:border-gray-700 rounded-md p-2">
+                            <option value="">All Techniques</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="scene-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            </div>
+            <div id="educational-view" style="display:none;">
+                <p>Educational content goes here.</p>
+            </div>
+            <div id="community-view" style="display:none;">
+                <p>Community content goes here.</p>
+            </div>
+            <div id="scene-details" style="display:none;"></div>
+        </main>
+    </div>
+</body>
+</html>
